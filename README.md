@@ -21,7 +21,16 @@ The project is built with a modular architecture that separates each stage of th
 The following diagram illustrates the high-level data flow from raw files to classified session data:
 ![Architecture Diagram](docs/overview.drawio.png)
 
+### Repo Structure
+
+- `data/`: sample `.tcx` files too large to include in the repo. Subset extracted for tests.
+- `docs/`: document design process
+- `main.py`: End-to-end workflow.
+- `notebooks/`: exploratory non-production code for Development
+- `src/`: source code
+
 ## Targets
+
 For MVP v1.0
 - [ ] Convert `.tcx` files to Polars DataFrame
 - [ ] GPS Outlier Detection

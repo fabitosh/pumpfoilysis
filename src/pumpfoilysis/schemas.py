@@ -8,7 +8,6 @@ SCHEMA_RAW = {
     "altitude_raw": pl.Float64,
 }
 
-# Schema after refining and adding calculated columns
 SCHEMA_REFINED = {
     **SCHEMA_RAW,
     "lat": pl.Float64,
