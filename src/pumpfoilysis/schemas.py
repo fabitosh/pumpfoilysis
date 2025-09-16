@@ -2,7 +2,7 @@ import polars as pl
 
 # Schema for the initial raw data parsed from .fit or .tcx files
 SCHEMA_RAW = {
-    "timestamp": pl.Datetime(time_unit="ms"),
+    "datetime": pl.Datetime(time_unit="ms"),
     "lat_raw": pl.Float64,
     "lon_raw": pl.Float64,
     "altitude_raw": pl.Float64,
