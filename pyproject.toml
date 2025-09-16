@@ -9,10 +9,10 @@ description = "Clean and Analyse Pumpfoil Activity Data"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "polars>=1.33.1",
+  "numpy",          # required for plotly.express 
+  "plotly>=6.3.0",
+  "polars>=1.33.1",
 ]
 
 [project.optional-dependencies]
-test = [
-    "pytest>=8.2.2",
-]
+test = ["pytest>=8.2.2"]
