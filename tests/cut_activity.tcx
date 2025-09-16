@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TrainingCenterDatabase
+  xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd"
+  xmlns:ns5="http://www.garmin.com/xmlschemas/ActivityGoals/v1"
+  xmlns:ns3="http://www.garmin.com/xmlschemas/ActivityExtension/v2"
+  xmlns:ns2="http://www.garmin.com/xmlschemas/UserProfile/v2"
+  xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns4="http://www.garmin.com/xmlschemas/ProfileExtension/v1">
+  <Activities>
+    <Activity Sport="Other">
+      <Id>2025-09-11T04:43:47.000Z</Id>
+      <Lap StartTime="2025-09-11T04:43:47.000Z">
+        <TotalTimeSeconds>2643.276</TotalTimeSeconds>
+        <DistanceMeters>2805.48</DistanceMeters>
+        <MaximumSpeed>5.7129998207092285</MaximumSpeed>
+        <Calories>298</Calories>
+        <AverageHeartRateBpm>
+          <Value>115</Value>
+        </AverageHeartRateBpm>
+        <MaximumHeartRateBpm>
+          <Value>158</Value>
+        </MaximumHeartRateBpm>
+        <Intensity>Active</Intensity>
+        <TriggerMethod>Manual</TriggerMethod>
+        <Track>
+          <Trackpoint>
+            <Time>2025-09-11T04:43:47.000Z</Time>
+            <Position>
+              <LatitudeDegrees>47.3848273884505</LatitudeDegrees>
+              <LongitudeDegrees>8.536269078031182</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>409.20001220703125</AltitudeMeters>
+            <DistanceMeters>0.0</DistanceMeters>
+            <HeartRateBpm>
+              <Value>63</Value>
+            </HeartRateBpm>
+            <Extensions>
+              <ns3:TPX>
+                <ns3:Speed>0.0</ns3:Speed>
+              </ns3:TPX>
+            </Extensions>
+          </Trackpoint>
+          <Trackpoint>
+            <Time>2025-09-11T04:43:48.000Z</Time>
+            <Position>
+              <LatitudeDegrees>47.38483317196369</LatitudeDegrees>
+              <LongitudeDegrees>8.536272430792451</LongitudeDegrees>
+            </Position>
+            <AltitudeMeters>409.20001220703125</AltitudeMeters>
+            <DistanceMeters>0.6899999976158142</DistanceMeters>
+            <HeartRateBpm>
+              <Value>63</Value>
+            </HeartRateBpm>
+            <Extensions>
+              <ns3:TPX>
+                <ns3:Speed>0.0</ns3:Speed>
+              </ns3:TPX>
+            </Extensions>
+          </Trackpoint>
+        </Track>
+        <Extensions>
+          <ns3:LX>
+            <ns3:AvgSpeed>1.0609999895095825</ns3:AvgSpeed>
+          </ns3:LX>
+        </Extensions>
+      </Lap>
+      <Creator xsi:type="Device_t">
+        <Name>Forerunner 945 LTE</Name>
+        <UnitId>3374935888</UnitId>
+        <ProductID>3652</ProductID>
+        <Version>
+          <VersionMajor>17</VersionMajor>
+          <VersionMinor>40</VersionMinor>
+          <BuildMajor>0</BuildMajor>
+          <BuildMinor>0</BuildMinor>
+        </Version>
+      </Creator>
+    </Activity>
+  </Activities>
+  <Author xsi:type="Application_t">
+    <Name>Connect Api</Name>
+    <Build>
+      <Version>
+        <VersionMajor>25</VersionMajor>
+        <VersionMinor>18</VersionMinor>
+        <BuildMajor>0</BuildMajor>
+        <BuildMinor>0</BuildMinor>
+      </Version>
+    </Build>
+    <LangID>en</LangID>
+    <PartNumber>006-D2449-00</PartNumber>
+  </Author>
+</TrainingCenterDatabase>
