@@ -1,8 +1,8 @@
-
 import polars as pl
 import polars.testing
 
 from pumpfoilysis.refine import linearize_geo
+
 def test_linearize_switzerland():
     ref_lat, ref_lon = 47.384827, 8.5362690
     df = pl.DataFrame({
@@ -31,3 +31,17 @@ def test_linearize_equator():
     expected_y = pl.Series("y", [0.0, -91.958])
     pl.testing.assert_series_equal(linearized_df['x'], expected_x, abs_tol=0.01)
     pl.testing.assert_series_equal(linearized_df['y'], expected_y, abs_tol=0.01)
+
+
+def test_linearize_no_ref_coords_takes_min():
+    df = pl.DataFrame({
+        'lat_raw': [47.384827, 47.384],
+        'lon_raw': [8.5362690, 8.5362]
+    })
+    linearized_df = linearize_geo(df, linearization_coordinate=None)
+    expected_x = pl.Series("x", [5.1948, 0.0])
+    expected_y = pl.Series("y", [91.958, 0.0])
+    pl.testing.assert_series_equal(linearized_df['x'], expected_x, abs_tol=0.01)
+    pl.testing.assert_series_equal(linearized_df['y'], expected_y, abs_tol=0.01)
+
+
