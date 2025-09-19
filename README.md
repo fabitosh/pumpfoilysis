@@ -9,7 +9,7 @@ Pumpfoilysis is a Python tool designed to analyze GPS activity files to automati
 The data processing follows a sequential pipeline:
 
 1.  **Parse**: Adapter layer for different file sources (.tcx, .gpx, .fit). Converts to a timeseries dataframe.
-2.  **Refine**: Cleans the raw data. Calculates key metrics like velocity and distance per step.
+2.  **Refine**: Cleans the raw data. Calculates key metrics like velocity, heading, handles gps outliers and gaps.
 3.  **Categorize**: Classifies sections.
 
 -----
@@ -28,6 +28,7 @@ The following diagram illustrates the high-level data flow from raw files to cla
 - `main.py`: End-to-end workflow.
 - `notebooks/`: exploratory non-production code for Development
 - `src/`: source code
+- `tests/`: collection of recordings and unit tests
 
 ## Targets
 
@@ -59,7 +60,7 @@ First, ensure you have `uv` installed. Then, clone the repository and set up the
 
 1.  **Install dependencies:**
 ```bash
-uv sync
+uv sync --all-extras
 ```
 2.  **Run the main application:**
 ```bash
