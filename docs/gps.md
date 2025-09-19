@@ -15,3 +15,8 @@ dfill = df.with_columns(pl.col(['lat_raw', 'lon_raw']).fill_null(strategy='forwa
 fig_debug = px.line_map(dfill.with_columns(is_nan=has_nan), lat='lat_raw', lon='lon_raw', color='is_nan', zoom=17, height=800)
 fig_debug.update_layout(map_style="open-street-map")
 ```
+
+## TCX provided distance and speed values
+Already went through some form of processing and don't match the raw GPS data. We will use them as comparison to find corner cases, but will not have any reliance on it.
+- The analysis should work with the raw GPS data only.
+- I'd rather create, understand and be able to tweak the processing.
