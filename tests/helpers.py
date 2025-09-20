@@ -31,5 +31,3 @@ def _ensure_tz_aware(dt: datetime) -> datetime:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
-
-

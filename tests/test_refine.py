@@ -37,6 +37,7 @@ def test_linearize_no_ref_coords_takes_min():
     pl.testing.assert_series_equal(linearized_df["x"], expected_x, abs_tol=0.01)
     pl.testing.assert_series_equal(linearized_df["y"], expected_y, abs_tol=0.01)
 
+
 def test_calc_refine_features_handles_gps_gaps():
     df = read_test_sample("samples/consecutive_gps_gaps.csv")
     df = calc_refine_features(df)

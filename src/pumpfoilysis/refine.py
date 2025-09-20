@@ -16,8 +16,7 @@ def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
     cols_gps = ["lat_raw", "lon_raw"]
     df_idx = _calc_generic_features(df.drop(cols_gps))
     df_gps = df.filter(
-        pl.col("lat_raw").is_not_null()
-        & pl.col("lon_raw").is_not_null()
+        pl.col("lat_raw").is_not_null() & pl.col("lon_raw").is_not_null()
     ).select(["datetime"] + cols_gps)
     return df_idx.join(_calc_gps_features(df_gps), on="datetime", how="left")
 
@@ -28,22 +27,32 @@ def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
         # delta_distance_raw=pl.col("distance_raw").diff(),  # todo: remove later
     )
 
+
 def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
     """Expects a dataframe with nan-filtered gps values."""
     # assert df.select("lat_raw", "lon_raw", "x", "y").null_count().sum() > 0, "GPS DataFrame contains null values."
     df = _linearize_geo(df)
-    return df.with_columns(
-        gps_sampling_rate=pl.col("datetime").diff(),
-        delta_x=pl.col("x").diff(),
-        delta_y=pl.col("y").diff(),
-    ).with_columns(
-        heading=(pl.arctan2(pl.col("delta_y"), pl.col("delta_x"))).degrees(),
-        distance=(pl.col("delta_x") ** 2 + pl.col("delta_y") ** 2) ** 0.5,
-    ).with_columns(
-        speed_kmh=(pl.col("distance") / pl.col("gps_sampling_rate").dt.total_seconds() * 3.6)
-        .fill_null(0)
-        .alias("speed_kmh")
+    return (
+        df.with_columns(
+            gps_sampling_rate=pl.col("datetime").diff(),
+            delta_x=pl.col("x").diff(),
+            delta_y=pl.col("y").diff(),
+        )
+        .with_columns(
+            heading=(pl.arctan2(pl.col("delta_y"), pl.col("delta_x"))).degrees(),
+            distance=(pl.col("delta_x") ** 2 + pl.col("delta_y") ** 2) ** 0.5,
+        )
+        .with_columns(
+            speed_kmh=(
+                    pl.col("distance")
+                    / pl.col("gps_sampling_rate").dt.total_seconds()
+                    * 3.6
+            )
+            .fill_null(0)
+            .alias("speed_kmh")
+        )
     )
+
 
 def _linearize_geo(
         df: pl.DataFrame, linearization_coordinate: tuple[float, float] | None = None
@@ -72,5 +81,8 @@ def _linearize_geo(
         y=pl.lit(RADIUS_EARTH) * (pl.col("lat_raw").radians() - lat_ref),
     )
 
-def reject_gps_outliers(df: pl.DataFrame, max_speed_kmh: float = SPEED_OUTLIER_KMH) -> pl.DataFrame:
+
+def reject_gps_outliers(
+        df: pl.DataFrame, max_speed_kmh: float = SPEED_OUTLIER_KMH
+) -> pl.DataFrame:
     df
