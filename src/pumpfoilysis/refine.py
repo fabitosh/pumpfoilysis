@@ -71,3 +71,6 @@ def _linearize_geo(
           * math.cos(lat_ref),
         y=pl.lit(RADIUS_EARTH) * (pl.col("lat_raw").radians() - lat_ref),
     )
+
+def reject_gps_outliers(df: pl.DataFrame, max_speed_kmh: float = SPEED_OUTLIER_KMH) -> pl.DataFrame:
+    df
