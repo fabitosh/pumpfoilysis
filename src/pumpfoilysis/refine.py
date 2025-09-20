@@ -41,7 +41,7 @@ def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
             distance=(pl.col("delta_x") ** 2 + pl.col("delta_y") ** 2) ** 0.5,
         )
         .with_columns(
-            speed_kmh=(
+            velocity_kmh=(
                     pl.col("distance")
                     / pl.col("gps_sampling_rate").dt.total_seconds()
                     * 3.6
