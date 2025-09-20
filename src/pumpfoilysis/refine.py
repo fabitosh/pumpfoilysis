@@ -2,14 +2,19 @@ import math
 
 import polars as pl
 
+# For now, we define the parameters in a hacky fashion here.
 
+# Foil Params
+SPEED_PUMP_MAX_KMH = 22.0  # Takoon Pump 1700
+# for short durations, extremely slow speeds are realistic but cannot be sustained.
+SPEED_PUMP_MIN_KMH = 5.0  # Stall Speed
 
-def linearize_geo(
-    df: pl.DataFrame, linearization_coordinate: tuple[float, float] | None = None
-) -> pl.DataFrame:
-    """
-    Flat Earth Linearization around the reference coordinate.
-    Inaccurate for about 0.5% for distances ~20km. This might be an issue with downwind pumping.
+# Off-Foil Params
+SPEED_SWIM_MAX_KMH = 3.0
+SPEED_WALK_MAX_KMH = 7.0
+MAX_OFF_FOIL_SPEED_KMH = max(SPEED_SWIM_MAX_KMH, SPEED_WALK_MAX_KMH)
+
+SPEED_OUTLIER_KMH = 2 * SPEED_PUMP_MAX_KMH
 
 
 def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
@@ -26,7 +31,7 @@ def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
+def _calc_gps_features(df: pl.DataFrame, min_outlier_kmh: float = SPEED_OUTLIER_KMH) -> pl.DataFrame:
     """Expects a dataframe with nan-filtered gps values."""
     if df.get_column("lat_raw").has_nulls() or df.get_column("lon_raw").has_nulls():
         raise RuntimeError(
@@ -50,6 +55,8 @@ def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
                     / pl.col("gps_sampling_rate").dt.total_seconds()
                     * 3.6
             )
+        ).with_columns(
+           is_outlier=pl.col("velocity_kmh") > min_outlier_kmh
         )
     )
 
@@ -84,9 +91,3 @@ def _linearize_geo(
           * math.cos(lat_ref),
         y=pl.lit(RADIUS_EARTH) * (pl.col("lat_raw").radians() - lat_ref),
     )
-
-
-def reject_gps_outliers(
-        df: pl.DataFrame, max_speed_kmh: float = SPEED_OUTLIER_KMH
-) -> pl.DataFrame:
-    df
