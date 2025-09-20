@@ -2,8 +2,8 @@ import polars as pl
 import polars.testing
 import pytest
 
+from pumpfoilysis.refine import _linearize_geo, _calc_gps_features, calc_refine_features
 from tests.helpers import read_test_sample
-from pumpfoilysis.refine import _linearize_geo, calc_refine_features, _calc_gps_features
 
 
 def test_linearize_switzerland():
@@ -60,3 +60,12 @@ def test_calc_refine_features_handles_gps_gaps():
                                        10.846201,
                                    ]),
                                    abs_tol=0.01)
+
+
+def test_calc_refine_features():
+    df = read_test_sample("consecutive_gps_gaps.csv")
+    df_out = calc_refine_features(df)
+    assert df_out.shape[0] == df.shape[0]
+    v = df_out.get_column("velocity_kmh").is_not_null()
+    assert v.sum() == 4 # First sample has no delta. Remainder should be data gaps
+
