@@ -1,6 +1,7 @@
 import polars as pl
 
 # Schema for the initial raw data parsed from .fit or .tcx files
+# Raw values should remain untouched after the parsing step.
 SCHEMA_RAW = {
     "datetime": pl.Datetime(time_unit="ms"),
     "lat_raw": pl.Float64,
@@ -10,10 +11,10 @@ SCHEMA_RAW = {
 
 SCHEMA_REFINED = {
     **SCHEMA_RAW,
+    # refined values after a gps refinement
     "lat": pl.Float64,
     "lon": pl.Float64,
     "velocity_kmh": pl.Float64,
-    "distance_m": pl.Float64,
     "is_outlier": pl.Boolean,  # set refined coordinates to NULL
 }
 
