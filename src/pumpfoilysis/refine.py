@@ -15,9 +15,7 @@ def linearize_geo(
 def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
     cols_gps = ["lat_raw", "lon_raw"]
     df_idx = _calc_generic_features(df.drop(cols_gps))
-    df_gps = df.filter(
-        pl.col("lat_raw").is_not_null() & pl.col("lon_raw").is_not_null()
-    ).select(["datetime"] + cols_gps)
+    df_gps = _filter_null_gps(df).select(["datetime"] + cols_gps)
     return df_idx.join(_calc_gps_features(df_gps), on="datetime", how="left")
 
 
@@ -52,6 +50,10 @@ def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
             .alias("speed_kmh")
         )
     )
+
+
+def _filter_null_gps(df):
+    return df.filter(pl.col("lat_raw").is_not_null() & pl.col("lon_raw").is_not_null())
 
 
 def _linearize_geo(
