@@ -49,6 +49,14 @@ def test_calc_gps_features_raises_if_gps_nans():
 def test_calc_refine_features_handles_gps_gaps():
     """The raw file has two short gaps. 1 sample off, 1 on, 2 off, rest on.
     We want to make sure that the average speed calculation takes the additional time into account."""
-    df = read_test_sample("tests/samples/consecutive_gps_gaps.csv")
-    df_gps = _calc_gps_features(df)
-    df_gps.get_column('velocity_kmh')
+    df = read_test_sample("consecutive_gps_gaps.csv")
+    df_gps = _calc_gps_features(df.filter(pl.col("lat_raw").is_not_null()).select(["datetime", "lat_raw", "lon_raw"]))
+    pl.testing.assert_series_equal(df_gps.get_column('velocity_kmh'),
+                                   pl.Series('velocity_kmh', [
+                                       None,
+                                       11.860085,
+                                       11.712399,
+                                       11.210484,
+                                       10.846201,
+                                   ]),
+                                   abs_tol=0.01)
