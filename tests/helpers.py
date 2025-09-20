@@ -23,7 +23,8 @@ def extract_test_sample(
     df.write_csv(Path(csv_dir_path) / f"{name}.csv")
 
 
-def read_test_sample(csv_dir_path: Path | str) -> pl.DataFrame:
+def read_test_sample(file_name: str) -> pl.DataFrame:
+    csv_dir_path = TESTS_DIR / file_name
     if not Path(csv_dir_path).is_file():
         raise FileNotFoundError(f"Test sample file not found: {csv_dir_path}")
     return pl.read_csv(csv_dir_path, try_parse_dates=True)
