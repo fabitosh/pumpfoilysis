@@ -1,5 +1,6 @@
 import polars as pl
 import polars.testing
+import pytest
 
 from tests.helpers import read_test_sample
 from pumpfoilysis.refine import _linearize_geo, calc_refine_features, _calc_gps_features
@@ -36,6 +37,13 @@ def test_linearize_no_ref_coords_takes_min():
     expected_y = pl.Series("y", [91.958, 0.0])
     pl.testing.assert_series_equal(linearized_df["x"], expected_x, abs_tol=0.01)
     pl.testing.assert_series_equal(linearized_df["y"], expected_y, abs_tol=0.01)
+
+
+def test_calc_gps_features_raises_if_gps_nans():
+    df = read_test_sample("consecutive_gps_gaps.csv")
+    # there are nan values for lat, lon in multiple rows.
+    with pytest.raises(RuntimeError, match="contains null values for lat_raw and lon_raw"):
+        _ = _calc_gps_features(df)
 
 
 def test_calc_refine_features_handles_gps_gaps():

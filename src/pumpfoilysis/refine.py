@@ -28,7 +28,11 @@ def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
 
 def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
     """Expects a dataframe with nan-filtered gps values."""
-    # assert df.select("lat_raw", "lon_raw", "x", "y").null_count().sum() > 0, "GPS DataFrame contains null values."
+    if df.get_column("lat_raw").has_nulls() or df.get_column("lon_raw").has_nulls():
+        raise RuntimeError(
+            "DataFrame contains null values for lat_raw and lon_raw. \n"
+            "Please filter out rows with missing GPS data before calling this function."
+        )
     df = _linearize_geo(df)
     return (
         df.with_columns(
