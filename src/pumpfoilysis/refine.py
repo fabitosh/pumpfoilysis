@@ -50,8 +50,6 @@ def _calc_gps_features(df: pl.DataFrame) -> pl.DataFrame:
                     / pl.col("gps_sampling_rate").dt.total_seconds()
                     * 3.6
             )
-            .fill_null(0)
-            .alias("speed_kmh")
         )
     )
 
