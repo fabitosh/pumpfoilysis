@@ -3,10 +3,10 @@ from pathlib import Path
 
 import polars as pl
 
-TESTS_DIR = Path(__file__).resolve().parent
+TESTS_DIR = Path(__file__).resolve().parent / "samples"
 
 
-def extract_test_case(
+def extract_test_sample(
     df: pl.DataFrame,
     name: str,
     start: datetime | None = None,
@@ -23,12 +23,13 @@ def extract_test_case(
     df.write_csv(Path(csv_dir_path) / f"{name}.csv")
 
 
+def read_test_sample(csv_dir_path: Path | str) -> pl.DataFrame:
+    return pl.read_csv(Path(csv_dir_path), try_parse_dates=True)
+
+
 def _ensure_tz_aware(dt: datetime) -> datetime:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
 
 
-def read_test_case(name: str, csv_dir_path: Path | str = TESTS_DIR) -> pl.DataFrame:
-    """Reads a test case from a CSV file."""
-    return pl.read_csv(Path(csv_dir_path) / f"{name}.csv", try_parse_dates=True)
