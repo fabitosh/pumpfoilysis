@@ -18,16 +18,17 @@ SPEED_OUTLIER_KMH = 2 * SPEED_PUMP_MAX_KMH
 
 
 def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
+    cols_index = ["datetime"]
     cols_gps = ["lat_raw", "lon_raw"]
     df_idx = _calc_generic_features(df.drop(cols_gps))
-    df_gps = _filter_null_gps(df).select(["datetime"] + cols_gps)
-    return df_idx.join(_calc_gps_features(df_gps), on="datetime", how="left")
+    df_gps = _filter_null_gps(df).select(cols_index + cols_gps)
+    return df_idx.join(_calc_gps_features(df_gps), on=cols_index, how="left")
 
 
 def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
     return df.with_columns(
         sampling_rate=pl.col("datetime").diff(),
-        # delta_distance_raw=pl.col("distance_raw").diff(),  # todo: remove later
+        # delta_distance_raw=pl.col("distance_raw").diff(),  # can be used as comparison with own calculations
     )
 
 
