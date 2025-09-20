@@ -4,7 +4,7 @@ from pumpfoilysis.schemas import SCHEMA_RAW
 
 
 def test_parse_tcx():
-    file_path = "/samples/cut_activity.tcx"
+    file_path = "tests/samples/cut_activity.tcx"
     df = parse_tcx(file_path)
     assert isinstance(df, pl.DataFrame)
     assert not df.is_empty()

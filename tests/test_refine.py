@@ -1,8 +1,8 @@
 import polars as pl
 import polars.testing
 
-from helpers import read_test_sample
-from pumpfoilysis.refine import _linearize_geo, calc_refine_features
+from tests.helpers import read_test_sample
+from pumpfoilysis.refine import _linearize_geo, calc_refine_features, _calc_gps_features
 
 
 def test_linearize_switzerland():
@@ -39,6 +39,8 @@ def test_linearize_no_ref_coords_takes_min():
 
 
 def test_calc_refine_features_handles_gps_gaps():
-    df = read_test_sample("samples/consecutive_gps_gaps.csv")
-    df = calc_refine_features(df)
-    assert "gps_sampling_rate" in df.columns
+    """The raw file has two short gaps. 1 sample off, 1 on, 2 off, rest on.
+    We want to make sure that the average speed calculation takes the additional time into account."""
+    df = read_test_sample("tests/samples/consecutive_gps_gaps.csv")
+    df_gps = _calc_gps_features(df)
+    df_gps.get_column('velocity_kmh')

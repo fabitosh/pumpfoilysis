@@ -24,7 +24,9 @@ def extract_test_sample(
 
 
 def read_test_sample(csv_dir_path: Path | str) -> pl.DataFrame:
-    return pl.read_csv(Path(csv_dir_path), try_parse_dates=True)
+    if not Path(csv_dir_path).is_file():
+        raise FileNotFoundError(f"Test sample file not found: {csv_dir_path}")
+    return pl.read_csv(csv_dir_path, try_parse_dates=True)
 
 
 def _ensure_tz_aware(dt: datetime) -> datetime:
