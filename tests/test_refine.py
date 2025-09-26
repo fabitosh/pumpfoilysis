@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import polars as pl
 import polars.testing
 import pytest
@@ -69,3 +71,25 @@ def test_calc_refine_features():
     v = df_out.get_column("velocity_kmh").is_not_null()
     assert v.sum() == 4 # First sample has no delta. Remainder should be data gaps
 
+def test_polars_rolling():
+    """Get clarity on how polars rolling functions behave.
+    The window is only backwards looking.
+    One null in the window -> take the remaining values."""
+    n = 5
+    df = pl.DataFrame({
+    "datetime": pl.datetime_range(
+        start=datetime(2025, 9, 26, 15, 0),
+        end=datetime(2025, 9, 27, 0, 0),
+        interval="1h",
+        eager=True,
+    ).slice(0, n),
+    "value": pl.arange(1, n + 1, eager=True).replace(3, None).replace(4, None),
+    })
+    out = df.rolling(index_column="datetime", period="2h").agg([
+        pl.mean("value").alias("mean_value"),
+    ])
+    expected = pl.DataFrame({
+        "datetime": df.get_column("datetime"),
+        "mean_value": pl.Series("mean_value", [1.0, 1.5, 2.0, None, 5.0]),
+    })
+    pl.testing.assert_frame_equal(out, expected, abs_tol=0.01)
