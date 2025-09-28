@@ -32,7 +32,9 @@ def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def _calc_gps_features(df: pl.DataFrame, min_outlier_kmh: float = SPEED_OUTLIER_KMH) -> pl.DataFrame:
+def _calc_gps_features(
+    df: pl.DataFrame, min_outlier_kmh: float = SPEED_OUTLIER_KMH
+) -> pl.DataFrame:
     """Expects a dataframe with nan-filtered gps values."""
     if df.get_column("lat_raw").has_nulls() or df.get_column("lon_raw").has_nulls():
         raise RuntimeError(
@@ -52,13 +54,12 @@ def _calc_gps_features(df: pl.DataFrame, min_outlier_kmh: float = SPEED_OUTLIER_
         )
         .with_columns(
             velocity_kmh=(
-                    pl.col("distance")
-                    / pl.col("gps_sampling_rate").dt.total_seconds()
-                    * 3.6
+                pl.col("distance")
+                / pl.col("gps_sampling_rate").dt.total_seconds()
+                * 3.6
             )
-        ).with_columns(
-           is_outlier=pl.col("velocity_kmh") > min_outlier_kmh
         )
+        .with_columns(is_outlier=pl.col("velocity_kmh") > min_outlier_kmh)
     )
 
 
@@ -67,7 +68,7 @@ def _filter_null_gps(df):
 
 
 def _linearize_geo(
-        df: pl.DataFrame, linearization_coordinate: tuple[float, float] | None = None
+    df: pl.DataFrame, linearization_coordinate: tuple[float, float] | None = None
 ) -> pl.DataFrame:
     """
     Flat Earth Linearization around the reference coordinate.
@@ -88,7 +89,7 @@ def _linearize_geo(
     lat_ref, lon_ref = map(math.radians, linearization_coordinate)
     return df.with_columns(
         x=pl.lit(RADIUS_EARTH)
-          * (pl.col("lon_raw").radians() - lon_ref)
-          * math.cos(lat_ref),
+        * (pl.col("lon_raw").radians() - lon_ref)
+        * math.cos(lat_ref),
         y=pl.lit(RADIUS_EARTH) * (pl.col("lat_raw").radians() - lat_ref),
     )
