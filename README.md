@@ -1,6 +1,12 @@
 # Pumpfoilysis 🏄‍♂️
 
-Pumpfoilysis is a Python tool designed to analyze GPS activity files to automatically identify and extract pump foiling sessions within the activity. It parses raw sensor data, refines it, classifies different states of activity, and saves the results in an accessible format.
+Pumpfoilysis is a Python tool designed to analyze GPS activity files of [pumpfoil](https://youtu.be/fyK9_ubjaL4)
+activities.
+It detects attempted starts, pumping runs, and statistics for each run.
+It parses raw sensor data, refines it, and classifies different states of activity.
+
+To my knowledge there is no existing open-source tool, that targets the challenge. Existing closed-source solutions
+are either on iOS only, or have not been able to handle the noisy GPS data reliably.
 
 -----
 
@@ -23,7 +29,6 @@ The following diagram illustrates the high-level data flow from raw files to cla
 
 ### Repo Structure
 
-- `data/`: sample `.tcx` files too large to include in the repo. Subset extracted for tests.
 - `docs/`: document design process
 - `main.py`: End-to-end workflow.
 - `notebooks/`: exploratory non-production code for Development
@@ -33,8 +38,9 @@ The following diagram illustrates the high-level data flow from raw files to cla
 ## Targets
 
 For MVP v1.0
-- [ ] Convert `.tcx` files to Polars DataFrame
-- [ ] GPS Outlier Detection
+
+- [x] Convert `.tcx` files to Polars DataFrame
+- [x] GPS Outlier Detection
 - [ ] Data Structures for Priors
 - [ ] On Foil Detection Algorithm using GPS and Priors
 - [ ] Provide Foil Session Summary Statistics

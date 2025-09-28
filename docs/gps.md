@@ -18,20 +18,33 @@ fig_debug.update_layout(map_style="open-street-map")
 
 ### Handling the gaps
 Options for handling the GPS gaps would be:
-- Keep them nan and let algos decide how to handle them. -> chosen for now
-- Backward/forward-fill the gaps.
-- Interpolate the data gaps between the known locations. Are the known locations around more likely to be outliers?
-- Drop rows with gaps. This would also drop data such as HR and other sensor data that could be useful features.
 
-We need to make sure that refined metrics such as the velocity calculation is aware that the sampling frequency has 
-not been consistent.
+- Keep them null and let algos decide how to handle them. -> chosen for now. There is not enough understanding of
+  the patterns yet.
+- Backward/forward-fill the gaps.
+- Interpolate the data gaps between the last and first known locations around GPS gaps. I would assume that the
+  first known locations would be more likely to be inaccurate or outliers.
+- Drop rows with GPS gaps early in the pipeline. This would also drop data such as HR and other sensor data that
+  could be useful.
+
+We need to make sure that refined metrics such as the velocity calculation is aware of inconsistent sampling frequency.
 
 ## Outliers
 Most impactful outliers are characterized by short and big jumps in position.
 An easy first filter is the rejection by comparison with maximum expected speeds.
 
+## Drift
+
+Some runs seem to be consistently off by a few meters.
+One can identify them when a session starts ~10m away from the starting dock,
+but consistently so over multiple following datapoints.
+Basically the run in itself has no visible issue.
 
 ## TCX provided distance and speed values
-Already went through some form of processing and don't match the raw GPS data. We will use them as comparison to find corner cases, but will not have any reliance on it.
-- The analysis should work with the raw GPS data only.
+
+The `.tcx` files of my watch come with `distance` and `speed` values for most rows.
+They have already gone through some form of processing and don't match the deltas of the raw GPS data.
+We will use them as comparison to find corner cases, but will not have any reliance on it.
+
+- The analysis should work on raw GPS data only.
 - I'd rather create, understand and be able to tweak the processing.
