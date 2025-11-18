@@ -2,19 +2,7 @@ import math
 
 import polars as pl
 
-# For now, we define the parameters in a hacky fashion here.
-
-# Foil Params
-SPEED_PUMP_MAX_KMH = 22.0  # Takoon Pump 1700
-# for short durations, extremely slow speeds are realistic but cannot be sustained.
-SPEED_PUMP_MIN_KMH = 5.0  # Stall Speed
-
-# Off-Foil Params
-SPEED_SWIM_MAX_KMH = 3.0
-SPEED_WALK_MAX_KMH = 7.0
-MAX_OFF_FOIL_SPEED_KMH = max(SPEED_SWIM_MAX_KMH, SPEED_WALK_MAX_KMH)
-
-SPEED_OUTLIER_KMH = 2 * SPEED_PUMP_MAX_KMH
+from pumpfoilysis.constants import SPEED_OUTLIER_KMH
 
 
 def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
