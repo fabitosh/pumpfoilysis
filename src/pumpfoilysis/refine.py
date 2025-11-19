@@ -15,7 +15,7 @@ def calc_refine_features(df: pl.DataFrame) -> pl.DataFrame:
 
 def _calc_generic_features(df: pl.DataFrame) -> pl.DataFrame:
     return df.with_columns(
-        sampling_rate=pl.col("datetime").diff(),
+        sampling_interval=pl.col("datetime").diff().dt.total_seconds(),
         # delta_distance_raw=pl.col("distance_raw").diff(),  # can be used as comparison with own calculations
     )
 
@@ -32,7 +32,7 @@ def _calc_gps_features(
     df = _linearize_geo(df)
     return (
         df.with_columns(
-            gps_sampling_rate=pl.col("datetime").diff(),
+            gps_sampling_interval=pl.col("datetime").diff().dt.total_seconds(),
             delta_x=pl.col("x").diff(),
             delta_y=pl.col("y").diff(),
         )
@@ -41,11 +41,7 @@ def _calc_gps_features(
             distance=(pl.col("delta_x") ** 2 + pl.col("delta_y") ** 2) ** 0.5,
         )
         .with_columns(
-            velocity_kmh=(
-                pl.col("distance")
-                / pl.col("gps_sampling_rate").dt.total_seconds()
-                * 3.6
-            )
+            velocity_kmh=(pl.col("distance") / pl.col("gps_sampling_interval") * 3.6)
         )
         .with_columns(is_outlier=pl.col("velocity_kmh") > min_outlier_kmh)
     )
