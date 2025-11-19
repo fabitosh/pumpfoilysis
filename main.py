@@ -14,5 +14,12 @@ def main():
     summary = calc_session_summary(df_categorized)
     print(summary)
 
+    # Export
+    output_path = Path("data/processed")
+    output_path.mkdir(parents=True, exist_ok=True)
+    df_categorized.write_csv(output_path / f"{ACTIVITY_PATH.stem}.csv")
+    summary.write_csv(output_path / f"{ACTIVITY_PATH.stem}_summary.csv")
+
+
 if __name__ == "__main__":
     main()
