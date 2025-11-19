@@ -1,5 +1,7 @@
 import polars as pl
 
+from pumpfoilysis.constants import MAX_OFF_FOIL_SPEED_KMH
+
 
 def calc_rolling_metrics(df: pl.DataFrame, window_size: str) -> pl.DataFrame:
     df = df.with_columns(
@@ -21,4 +23,9 @@ def calc_rolling_metrics(df: pl.DataFrame, window_size: str) -> pl.DataFrame:
     return df
 
 
-# def categorize(df: pl.DataFrame, )
+def categorize(df: pl.DataFrame, window_size: str = "3s") -> pl.DataFrame:
+    df = calc_rolling_metrics(df, window_size)
+    df = df.with_columns(
+        is_pumping=pl.col("velocity_smoothed") > MAX_OFF_FOIL_SPEED_KMH,
+    )
+    return df
